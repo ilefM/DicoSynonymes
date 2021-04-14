@@ -13,6 +13,75 @@
 
 namespace TP3
 {
+    /**
+     * \fn	DicoSynonymes::DicoSynonymes()
+     * \brief constructeur par defaut. initialisation de l'attribut racine, nbRadicaux et groupesSynonymes.
+     */
+    DicoSynonymes::DicoSynonymes()
+    {
+        racine = nullptr;
+        nbRadicaux = 0;
+        groupesSynonymes = std::vector<std::list<NoeudDicoSynonymes*>>();
+    }
+
+    /**
+     * \fn	DicoSynonymes::DicoSynonymes()
+     * \brief constructeur avec parametre a partir d'un fichier. Chargement du dictionnaire a partir du fichier en parametre.
+     */
+    DicoSynonymes::DicoSynonymes(std::ifstream &fichier)
+    {
+        chargerDicoSynonyme(fichier);
+    }
+
+    /**
+     * \fn	DicoSynonymes::DicoSynonymes()
+     * \brief constructeur avec parametre a partir d'un fichier. Chargement du dictionnaire a partir du fichier en parametre.
+     */
+     DicoSynonymes::~DicoSynonymes()
+     {
+         _destructeur(racine);
+     }
+
+    void DicoSynonymes::ajouterRadical(const std::string& motRadical)
+    {
+
+    }
+
+    void DicoSynonymes::ajouterFlexion(const std::string& motRadical, const std::string& motFlexion)
+    {
+
+    }
+
+    void DicoSynonymes::ajouterSynonyme(const std::string& motRadical, const std::string& motSynonyme, int& numGroupe)
+    {
+
+    }
+
+    void DicoSynonymes::supprimerRadical(const std::string& motRadical)
+    {
+
+    }
+
+    void DicoSynonymes::supprimerFlexion(const std::string& motRadical, const std::string& motFlexion)
+    {
+
+    }
+
+    void DicoSynonymes::supprimerSynonyme(const std::string& motRadical, const std::string& motSynonyme, int& numGroupe)
+    {
+
+    }
+
+    bool DicoSynonymes::estVide() const
+    {
+         return nbRadicaux == 0;
+    }
+
+    int DicoSynonymes::nombreRadicaux() const
+    {
+         return 0;
+    }
+
 
 	// Méthode fournie
 	void DicoSynonymes::chargerDicoSynonyme(std::ifstream& fichier)
@@ -60,6 +129,44 @@ namespace TP3
 		}
 	}
 
-	//Mettez l'implantation des autres méthodes demandées ici.
+    std::string DicoSynonymes::rechercherRadical(const std::string& mot) const
+    {
+         return "";
+    }
+
+    float DicoSynonymes::similitude(const std::string& mot1, const std::string& mot2) const
+    {
+         return 0;
+    }
+
+    int DicoSynonymes::getNombreSens(std::string radical) const
+    {
+         return 0;
+    }
+
+    std::string DicoSynonymes::getSens(std::string radical, int position) const
+    {
+         return "";
+    }
+
+    std::vector<std::string> DicoSynonymes::getSynonymes(std::string radical, int position) const
+    {
+         return std::vector<std::string>();
+    }
+
+    std::vector<std::string> DicoSynonymes::getFlexions(std::string radical) const
+    {
+        return std::vector<std::string>();
+    }
+
+    void DicoSynonymes::_destructeur(NoeudDicoSynonymes* & noeud)
+    {
+         if(noeud != nullptr)
+         {
+             _destructeur(noeud->gauche);
+             _destructeur(noeud->droit);
+             delete noeud;
+         }
+    }
 
 }//Fin du namespace

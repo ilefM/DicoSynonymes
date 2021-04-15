@@ -34,7 +34,7 @@ namespace TP3
    {
    public:
 
-      /**
+      /*
       *\brief     Constructeur
       *
       *\post      Une instance vide de la classe a été initialisée
@@ -42,7 +42,7 @@ namespace TP3
       */
       DicoSynonymes();
 
-      /**
+      /*
       *\brief  Constructeur de dictionnaire à partir d'un fichier
       *
       *\pre    Il y a suffisament de mémoire
@@ -57,7 +57,7 @@ namespace TP3
       DicoSynonymes(std::ifstream &fichier);
 
 
-      /**
+      /*
       *\brief     Destructeur.
       *
       *\post      Une instance de la classe est détruite.
@@ -65,7 +65,7 @@ namespace TP3
       */
       ~DicoSynonymes();
 
-      /**
+      /*
       *\brief     Ajouter un radical au dictionnaire des synonymes
       *\brief     tout en s’assurant de maintenir l'équilibre de l'arbre.
       *
@@ -78,7 +78,7 @@ namespace TP3
       */
       void ajouterRadical(const std::string& motRadical);
 
-      /**
+      /*
       *\brief  Ajouter une flexion (motFlexion) d'un radical (motRadical) à sa liste de flexions.
       *
       *\pre    Il y a suffisament de mémoire.
@@ -90,7 +90,7 @@ namespace TP3
       */
       void ajouterFlexion(const std::string& motRadical, const std::string& motFlexion);
 
-      /**
+      /*
       *\brief  Ajouter un synonyme (motSynonyme) d'un radical (motRadical)
       *\brief  à un de ses groupes de synonymes.
       *
@@ -107,7 +107,7 @@ namespace TP3
       */
       void ajouterSynonyme(const std::string& motRadical, const std::string& motSynonyme, int& numGroupe);
 
-      /**
+      /*
       *\brief     Supprimer un radical du dictionnaire des synonymes
       *\brief     tout en s’assurant de maintenir l'équilibre de l'arbre.
       *
@@ -123,7 +123,7 @@ namespace TP3
       */
       void supprimerRadical(const std::string& motRadical);
 
-      /**
+      /*
       *\brief   Supprimer une flexion (motFlexion) d'un radical
       *\brief   (motRadical) de sa liste de flexions.
       *
@@ -136,7 +136,7 @@ namespace TP3
       */
       void supprimerFlexion(const std::string& motRadical, const std::string& motFlexion);
 
-      /**
+      /*
       *\brief   Retirer motSynonyme faisant partie du numéro de groupe numGroupe du motRadical.
       *
       *\pre    motRadical et motSynonyme existent et motRadical
@@ -148,7 +148,7 @@ namespace TP3
       */
       void supprimerSynonyme(const std::string& motRadical, const std::string& motSynonyme, int& numGroupe);
 
-      /**
+      /*
       *\brief     Vérifier si le dictionnaire est vide
       *
       *\post      Le dictionnaire est inchangée
@@ -321,7 +321,24 @@ namespace TP3
       	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	// de pointeurs sur des noeuds de l'arbre représentant les radicaux.
 
       // Ajoutez vos méthodes privées ici !
-      void _destructeur(NoeudDicoSynonymes* & noeud);
+      void _destructeur(NoeudDicoSynonymes* & arbre);
+      void _auxAjouterRadical(NoeudDicoSynonymes* & noeud, const std::string& motRadical);
+
+      void _balance();
+      bool _debalancementAGauche(NoeudDicoSynonymes* & arbre);
+      bool _debalancementADroite(NoeudDicoSynonymes* & arbre);
+      bool _sousArbrePencheADroite(NoeudDicoSynonymes* & arbre);
+      bool _sousArbrePencheAGauche(NoeudDicoSynonymes* & arbre);
+      void _zigZagGauche(NoeudDicoSynonymes* & arbre);
+      void _zigZagDroit(NoeudDicoSynonymes* & arbre);
+      void _zigZigGauche(NoeudDicoSynonymes* & arbre);
+      void _zigZigDroit(NoeudDicoSynonymes* & arbre);
+      int _hauteur(NoeudDicoSynonymes* arbre);
+
+
+
+
+
 
    };
 

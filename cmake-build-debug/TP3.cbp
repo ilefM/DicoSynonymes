@@ -8,38 +8,38 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug"/>
+				<Option working_dir="/home/etudiant/Bureau/CodeTP3/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug"/>
+				<Option working_dir="/home/etudiant/Bureau/CodeTP3/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug"/>
+				<Option working_dir="/home/etudiant/Bureau/CodeTP3/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="TP3">
-				<Option output="/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/TP3" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug"/>
+				<Option output="/home/etudiant/Bureau/CodeTP3/cmake-build-debug/TP3" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/etudiant/Bureau/CodeTP3/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -54,15 +54,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 TP3"/>
-					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 TP3"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="TP3/fast">
-				<Option output="/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/TP3" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug"/>
+				<Option output="/home/etudiant/Bureau/CodeTP3/cmake-build-debug/TP3" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/etudiant/Bureau/CodeTP3/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -77,23 +77,23 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 TP3/fast"/>
-					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j6 -f &quot;/home/etudiant/CLionProjects/DicoSynonymes/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 TP3/fast"/>
+					<CompileFile command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j6 -f &quot;/home/etudiant/Bureau/CodeTP3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/etudiant/CLionProjects/DicoSynonymes/DicoSynonymes.cpp">
+		<Unit filename="/home/etudiant/Bureau/CodeTP3/DicoSynonymes.cpp">
 			<Option target="TP3"/>
 		</Unit>
-		<Unit filename="/home/etudiant/CLionProjects/DicoSynonymes/DicoSynonymes.h">
+		<Unit filename="/home/etudiant/Bureau/CodeTP3/DicoSynonymes.h">
 			<Option target="TP3"/>
 		</Unit>
-		<Unit filename="/home/etudiant/CLionProjects/DicoSynonymes/Principal.cpp">
+		<Unit filename="/home/etudiant/Bureau/CodeTP3/Principal.cpp">
 			<Option target="TP3"/>
 		</Unit>
-		<Unit filename="/home/etudiant/CLionProjects/DicoSynonymes/CMakeLists.txt">
+		<Unit filename="/home/etudiant/Bureau/CodeTP3/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

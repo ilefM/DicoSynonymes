@@ -13,6 +13,7 @@
 
 namespace TP3
 {
+
     /**
      * \fn	DicoSynonymes::DicoSynonymes()
      * \brief constructeur par defaut. initialisation de l'attribut racine, nbRadicaux et groupesSynonymes.
@@ -30,6 +31,9 @@ namespace TP3
      */
     DicoSynonymes::DicoSynonymes(std::ifstream &fichier)
     {
+        racine = nullptr;
+        nbRadicaux = 0;
+        groupesSynonymes = std::vector<std::list<NoeudDicoSynonymes*>>();
         chargerDicoSynonyme(fichier);
     }
 
@@ -37,14 +41,14 @@ namespace TP3
      * \fn	DicoSynonymes::DicoSynonymes()
      * \brief constructeur avec parametre a partir d'un fichier. Chargement du dictionnaire a partir du fichier en parametre.
      */
-     DicoSynonymes::~DicoSynonymes()
-     {
-         _destructeur(racine);
-     }
+    DicoSynonymes::~DicoSynonymes()
+    {
+        _destructeur(racine);
+    }
 
     void DicoSynonymes::ajouterRadical(const std::string& motRadical)
     {
-
+        _auxAjouterRadical(racine, motRadical);
     }
 
     void DicoSynonymes::ajouterFlexion(const std::string& motRadical, const std::string& motFlexion)
@@ -74,84 +78,84 @@ namespace TP3
 
     bool DicoSynonymes::estVide() const
     {
-         return nbRadicaux == 0;
+        return nbRadicaux == 0;
     }
 
     int DicoSynonymes::nombreRadicaux() const
     {
-         return 0;
+        return 0;
     }
 
 
-	// Méthode fournie
-	void DicoSynonymes::chargerDicoSynonyme(std::ifstream& fichier)
-	{
+    // Méthode fournie
+    void DicoSynonymes::chargerDicoSynonyme(std::ifstream& fichier)
+    {
         if (!fichier.is_open())
             throw std::logic_error("DicoSynonymes::chargerDicoSynonyme: Le fichier n'est pas ouvert !");
 
-		std::string ligne;
-		std::string buffer;
-		std::string radical;
-		int cat = 1;
+        std::string ligne;
+        std::string buffer;
+        std::string radical;
+        int cat = 1;
 
-		while (!fichier.eof()) // tant qu'on peut lire dans le fichier
-		{
+        while (!fichier.eof()) // tant qu'on peut lire dans le fichier
+        {
             std::getline(fichier, ligne);
 
-			if (ligne == "$")
-			{
-				cat = 3;
-				std::getline(fichier, ligne);
-			}
-			if (cat == 1)
-			{
-				radical = ligne;
-				ajouterRadical(radical);
-				cat = 2;
-			}
-			else if (cat == 2)
-			{
-				std::stringstream ss(ligne);
-				while (ss >> buffer)
-					ajouterFlexion(radical, buffer);
-				cat = 1;
-			}
-			else
-			{
-				std::stringstream ss(ligne);
-				ss >> radical;
-				ss >> buffer;
-				int position = -1;
-				ajouterSynonyme(radical, buffer, position);
-				while (ss >> buffer)
-					ajouterSynonyme(radical, buffer, position);
-			}
-		}
-	}
+            if (ligne == "$")
+            {
+                cat = 3;
+                std::getline(fichier, ligne);
+            }
+            if (cat == 1)
+            {
+                radical = ligne;
+                ajouterRadical(radical);
+                cat = 2;
+            }
+            else if (cat == 2)
+            {
+                std::stringstream ss(ligne);
+                while (ss >> buffer)
+                    ajouterFlexion(radical, buffer);
+                cat = 1;
+            }
+            else
+            {
+                std::stringstream ss(ligne);
+                ss >> radical;
+                ss >> buffer;
+                int position = -1;
+                ajouterSynonyme(radical, buffer, position);
+                while (ss >> buffer)
+                    ajouterSynonyme(radical, buffer, position);
+            }
+        }
+    }
 
     std::string DicoSynonymes::rechercherRadical(const std::string& mot) const
     {
-         return "";
+        return "";
     }
 
     float DicoSynonymes::similitude(const std::string& mot1, const std::string& mot2) const
     {
-         return 0;
+        return 0;
     }
 
     int DicoSynonymes::getNombreSens(std::string radical) const
     {
-         return 0;
+        return 0;
     }
 
     std::string DicoSynonymes::getSens(std::string radical, int position) const
     {
-         return "";
+        return "";
     }
 
     std::vector<std::string> DicoSynonymes::getSynonymes(std::string radical, int position) const
     {
-         return std::vector<std::string>();
+        return std::vector<std::string>();
     }
 
     std::vector<std::string> DicoSynonymes::getFlexions(std::string radical) const
@@ -161,12 +165,124 @@ namespace TP3
 
     void DicoSynonymes::_destructeur(NoeudDicoSynonymes* & noeud)
     {
-         if(noeud != nullptr)
-         {
-             _destructeur(noeud->gauche);
-             _destructeur(noeud->droit);
-             delete noeud;
-         }
+        if(noeud != nullptr)
+        {
+            _destructeur(noeud->gauche);
+            _destructeur(noeud->droit);
+            delete noeud;
+        }
     }
+
+    void DicoSynonymes::_auxAjouterRadical(NoeudDicoSynonymes* & noeud, const std::string &motRadical)
+    {
+        if(noeud == nullptr)
+        {
+            noeud = new NoeudDicoSynonymes(motRadical);
+            nbRadicaux++;
+            return;
+        }
+
+        if(motRadical < noeud->radical)
+            _auxAjouterRadical(noeud->gauche, motRadical);
+        else if(motRadical > noeud->radical)
+            _auxAjouterRadical(noeud->droit, motRadical);
+        else
+            throw std::logic_error("Le radical existe déjà !");
+
+        _balance();
+    }
+
+    void DicoSynonymes::_balance()
+    {
+        if(_debalancementAGauche(racine))
+        {
+            if(_sousArbrePencheADroite(racine->gauche))
+                _zigZagGauche(racine);
+            else
+                _zigZigGauche(racine);
+        } else if(_debalancementADroite(racine))
+        {
+            if(_sousArbrePencheAGauche(racine->droit))
+                _zigZagDroit(racine);
+            else
+                _zigZigDroit(racine);
+        }
+        else
+        {
+            if(racine != nullptr)
+                racine->hauteur = 1 + std::max(_hauteur(racine->gauche), _hauteur(racine->droit));
+        }
+    }
+
+    int DicoSynonymes::_hauteur(NoeudDicoSynonymes *arbre)
+    {
+        if(arbre == nullptr)
+            return -1;
+        return arbre->hauteur;
+    }
+
+    bool DicoSynonymes::_debalancementAGauche(NoeudDicoSynonymes *&arbre)
+    {
+        if(arbre == nullptr)
+            return false;
+        return 1 < _hauteur(arbre->gauche) - _hauteur(arbre->droit);
+    }
+
+    bool DicoSynonymes::_debalancementADroite(NoeudDicoSynonymes *&arbre)
+    {
+        if(arbre == nullptr)
+            return false;
+        return 1 < _hauteur(arbre->droit) - _hauteur(arbre->gauche);
+    }
+
+    bool DicoSynonymes::_sousArbrePencheADroite(NoeudDicoSynonymes *&arbre)
+    {
+        if(arbre == nullptr)
+            return false;
+        return _hauteur(arbre->gauche) < _hauteur(arbre->droit);
+    }
+
+    bool DicoSynonymes::_sousArbrePencheAGauche(NoeudDicoSynonymes *&arbre)
+    {
+        if(arbre == nullptr)
+            return false;
+        return _hauteur(arbre->droit) < _hauteur(arbre->gauche);
+    }
+
+    void DicoSynonymes::_zigZigGauche(NoeudDicoSynonymes *&arbre)
+    {
+        NoeudDicoSynonymes *noeud = arbre->gauche;
+        arbre->gauche = noeud->droit;
+        noeud->droit = arbre;
+        arbre->hauteur = 1 + std::max(_hauteur(arbre->gauche), _hauteur(arbre->droit));
+        noeud->hauteur = 1 + std::max(_hauteur(noeud->gauche), arbre->hauteur);
+        arbre = noeud;
+    }
+
+    void DicoSynonymes::_zigZigDroit(NoeudDicoSynonymes *&arbre)
+    {
+        NoeudDicoSynonymes *noeud = arbre->droit;
+        arbre->droit = noeud->gauche;
+        noeud->gauche = arbre;
+        arbre->hauteur = 1 + std::max(_hauteur(arbre->droit), _hauteur(arbre->gauche));
+        noeud->hauteur = 1 + std::max(_hauteur(noeud->droit), arbre->hauteur);
+        arbre = noeud;
+    }
+
+    void DicoSynonymes::_zigZagGauche(NoeudDicoSynonymes *&arbre)
+    {
+        _zigZigDroit(arbre->gauche);
+        _zigZigGauche(arbre);
+    }
+
+    void DicoSynonymes::_zigZagDroit(NoeudDicoSynonymes *&arbre)
+    {
+        _zigZigGauche(arbre->droit);
+        _zigZigDroit(arbre);
+    }
+
+
+
+	//Mettez l'implantation des autres méthodes demandées ici.
 
 }//Fin du namespace

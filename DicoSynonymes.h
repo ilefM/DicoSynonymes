@@ -313,8 +313,6 @@ namespace TP3
          NoeudDicoSynonymes(const std::string& m) : radical(m), hauteur(0), gauche(0), droit(0) { }
       };
 
-
-
       NoeudDicoSynonymes *racine;                           // pointeur vers la racine de l'arbre des radicaux.
       int nbRadicaux;                                       // Nombre de noeuds dans l'arbre
       std::vector< std::list<NoeudDicoSynonymes*> > groupesSynonymes;   // Tableau de groupes de synonymes dont chaque élément est une liste
@@ -323,6 +321,8 @@ namespace TP3
       // Ajoutez vos méthodes privées ici !
       void _destructeur(NoeudDicoSynonymes* & arbre);
       void _auxAjouterRadical(NoeudDicoSynonymes* & noeud, const std::string& motRadical);
+      void _auxSupprimerRadical(NoeudDicoSynonymes* noeud, const std::string& motRadical);
+      void _supprimerSuccMinDroite(NoeudDicoSynonymes* noeud);
 
       void _balance();
       bool _debalancementAGauche(NoeudDicoSynonymes* & arbre);

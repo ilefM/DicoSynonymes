@@ -130,7 +130,7 @@ namespace TP3
 
     int DicoSynonymes::nombreRadicaux() const
     {
-        return 0;
+        return nbRadicaux;
     }
 
 
@@ -207,7 +207,10 @@ namespace TP3
 
     std::vector<std::string> DicoSynonymes::getFlexions(std::string radical) const
     {
-        return std::vector<std::string>();
+        std::vector<std::string> vecFlexion;
+        for(std::string const &flexion : _auxAppartient(racine, radical)->flexions)
+            vecFlexion.push_back(flexion);
+        return vecFlexion;
     }
 
     void DicoSynonymes::_destructeur(NoeudDicoSynonymes* & noeud)
@@ -248,7 +251,14 @@ namespace TP3
             _auxSupprimerRadical(noeud->droit, motRadical);
         else if(noeud->gauche != nullptr && noeud->droit != nullptr)
             _supprimerSuccMinDroite(noeud);
-
+        else
+        {
+            NoeudDicoSynonymes* vieuxNoeud = noeud;
+            noeud = (noeud->gauche != nullptr) ? noeud->gauche : noeud->droit;
+            delete vieuxNoeud;
+            nbRadicaux--;
+        }
+        _balance();
     }
 
     void DicoSynonymes::_supprimerSuccMinDroite(NoeudDicoSynonymes *noeud)
@@ -262,8 +272,9 @@ namespace TP3
             temp = temp->gauche;
         }
 
-        //A VERIFIER !!!!!!!!!!!!!!!!!
         noeud->radical = temp->radical;
+        std::swap(noeud->appSynonymes, temp->appSynonymes);
+        std::swap(noeud->flexions, temp->flexions);
 
         if(temp == parent->gauche)
             _auxSupprimerRadical(parent->gauche, temp->radical);

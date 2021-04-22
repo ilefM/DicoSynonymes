@@ -335,7 +335,7 @@ namespace TP3
       void _zigZigDroit(NoeudDicoSynonymes* & arbre);
       int _hauteur(NoeudDicoSynonymes* arbre);
 
-      NoeudDicoSynonymes* _auxAppartient(NoeudDicoSynonymes* arbre, const std::string & radical);
+      NoeudDicoSynonymes* _auxAppartient(NoeudDicoSynonymes* arbre, const std::string & radical) const;
 
 
 

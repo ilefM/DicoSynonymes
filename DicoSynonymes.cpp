@@ -244,9 +244,8 @@ namespace TP3
     // Méthode fournie
     /**
     * \fn	DicoSynonymes::chargerDicoSynonyme
-    * \brief Retirer motSynonyme faisant partie du numéro de groupe numGroupe du motRadical.
-    * \exception logic_error "DicoSynonymes::supprimerSynonyme: Le radical ou le synonyme n'est pas dans l'arbre"
-    * \exception logic_error "DicoSynonymes::supprimerSynonyme: Le radical n'appartient pas au groupe numGroupe"
+    * \brief charge le dictionnaire a partir d'un fichier texte
+    * \param[in] fichier
    */
     void DicoSynonymes::chargerDicoSynonyme(std::ifstream& fichier)
     {
@@ -293,6 +292,13 @@ namespace TP3
         }
     }
 
+    /**
+     * \fn	DicoSynonymes::rechercherRadical
+     * \brief recherche le radical qui a le taux de similitude le plus proche de parametre mot
+     * \param[in] mot
+     * \exception logic_error "DicoSynonymes::rechercherRadical: L'arbre est vide!"
+     * \exception logic_error "DicoSynonymes::rechercherRadical: La flexion n'est pas dans les flexions du radical!"
+    */
     std::string DicoSynonymes::rechercherRadical(const std::string& mot) const
     {
         if(nbRadicaux == 0)
@@ -313,10 +319,13 @@ namespace TP3
         }
 
         throw std::logic_error("DicoSynonymes::rechercherRadical: La flexion n'est pas dans les flexions du radical!");
-
-
     }
 
+    /**
+     * \fn	DicoSynonymes::similitude
+     * \brief trouve le taux de similitude entre deux mots 1 identique, 0 dissemblable. Ici justilise l'algorithme de distance de Jaro
+     * \param[in] mot1, mot2
+    */
     float DicoSynonymes::similitude(const std::string& mot1, const std::string& mot2) const
     {
         //J'utilise l'algorithme de distance de Jaro qui est plus optimal que celui de Levenshtein
@@ -357,11 +366,21 @@ namespace TP3
         return (m / l1 + m / l2 + (m - t) / m) / 3.0;
     }
 
+    /**
+     * \fn	DicoSynonymes::getNombreSens
+     * \brief Donne le nombre de cellules de appSynonymes.
+     * \param[in] radical
+    */
     int DicoSynonymes::getNombreSens(std::string radical) const
     {
         return _auxAppartient(racine, radical)->appSynonymes.size();
     }
 
+    /**
+     * \fn	DicoSynonymes::getSens
+     * \brief Donne le premier synonyme du groupe de synonyme de l'emplacement entrée en paramètre.
+     * \param[in] radical, position
+    */
     std::string DicoSynonymes::getSens(std::string radical, int position) const
     {
         NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, radical);
@@ -374,6 +393,13 @@ namespace TP3
         return groupesSynonymes[noeudRadical->appSynonymes[position]].front()->radical;
     }
 
+    /**
+     * \fn	DicoSynonymes::getSynonymes
+     * \brief Donne tous les synonymes du mot entré en paramètre du groupeSynonyme du parametre position
+     * \param[in] radical, position
+     * \exception logic_error "DicoSynonymes::getSynonymes: Le radical n'est pas dans l'arbre ! "
+     * \exception logic_error "DicoSynonymes::getSynonymes: La position entree n'est pas valide"
+    */
     std::vector<std::string> DicoSynonymes::getSynonymes(std::string radical, int position) const
     {
         NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, radical);
@@ -391,6 +417,11 @@ namespace TP3
         return synonymesVec;
     }
 
+    /**
+     * \fn	DicoSynonymes::getFlexions
+     * \brief Donne toutes les flexions du mot entré en paramètre
+     * \param[in] radical
+    */
     std::vector<std::string> DicoSynonymes::getFlexions(std::string radical) const
     {
         NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, radical);
@@ -406,10 +437,13 @@ namespace TP3
     }
 
 
-
-
     /////////////////////// METHODES PRIVEES //////////////////////////
 
+    /**
+    * \fn	DicoSynonymes::_destructeur
+    * \brief destructeur recursive
+    * \param[in] noeud
+   */
     void DicoSynonymes::_destructeur(NoeudDicoSynonymes *&noeud)
     {
         if(noeud != nullptr)
@@ -420,6 +454,12 @@ namespace TP3
         }
     }
 
+    /**
+    * \fn	DicoSynonymes::_auxAjouterRadical
+    * \brief ajout d'un radical recursive
+    * \param[in] noeud, motRadical
+    * \exception logic_error "DicoSynonymes::_auxAjouterRadical: Le radical existe deja !"
+   */
     void DicoSynonymes::_auxAjouterRadical(NoeudDicoSynonymes *&noeud, const std::string &motRadical)
     {
         if(noeud == nullptr)
@@ -438,6 +478,12 @@ namespace TP3
         _balance(noeud);
     }
 
+    /**
+    * \fn	DicoSynonymes::_auxSupprimerRadical
+    * \brief supression d'un radical recursive
+    * \param[in] arbre, motRadical
+    * \exception logic_error "DicoSynonymes::_auxSupprimerRadical: Le radical a supprimer est absent!"
+   */
     void DicoSynonymes::_auxSupprimerRadical(NoeudDicoSynonymes *&arbre, const std::string &motRadical)
     {
         if(arbre == nullptr)
@@ -458,6 +504,11 @@ namespace TP3
          _balance(arbre);
     }
 
+    /**
+    * \fn	DicoSynonymes::_supprimerSuccMinDroite
+    * \brief supression du successeur minimal droit d'un noeud pour la suppresion d'un radical
+    * \param[in] arbre
+   */
     void DicoSynonymes::_supprimerSuccMinDroite(NoeudDicoSynonymes *arbre)
     {
         NoeudDicoSynonymes* temp = arbre->droit;
@@ -479,6 +530,11 @@ namespace TP3
             _auxSupprimerRadical(parent->droit, temp->radical);
     }
 
+    /**
+    * \fn	DicoSynonymes::_balance
+    * \brief balancement recursif d'un arbre
+    * \param[in] arbre
+   */
     void DicoSynonymes::_balance(NoeudDicoSynonymes* &arbre)
     {
         if(_debalancementAGauche(arbre))
@@ -501,6 +557,11 @@ namespace TP3
         }
     }
 
+    /**
+    * \fn	DicoSynonymes::_hauteur
+    * \brief calculer hauteur d'un noeud
+    * \param[in] arbre
+   */
     int DicoSynonymes::_hauteur(NoeudDicoSynonymes *arbre)
     {
         if(arbre == nullptr)
@@ -508,6 +569,11 @@ namespace TP3
         return arbre->hauteur;
     }
 
+    /**
+    * \fn	DicoSynonymes::_debalancementAGauche
+    * \brief balancement recursif d'un arbre (dans le meme groupe de methodes...)
+    * \param[in] arbre
+   */
     bool DicoSynonymes::_debalancementAGauche(NoeudDicoSynonymes *&arbre)
     {
         if(arbre == nullptr)
@@ -517,6 +583,11 @@ namespace TP3
         return false;
     }
 
+    /**
+    * \fn	DicoSynonymes::_debalancementADroite
+    * \brief balancement recursif d'un arbre (dans le meme groupe de methodes...)
+    * \param[in] arbre
+   */
     bool DicoSynonymes::_debalancementADroite(NoeudDicoSynonymes *&arbre)
     {
         if(arbre == nullptr)
@@ -526,6 +597,11 @@ namespace TP3
         return false;
     }
 
+    /**
+    * \fn	DicoSynonymes::_sousArbrePencheADroite
+    * \brief balancement recursif d'un arbre (dans le meme groupe de methodes...)
+    * \param[in] arbre
+   */
     bool DicoSynonymes::_sousArbrePencheADroite(NoeudDicoSynonymes *&arbre)
     {
         if(arbre == nullptr)
@@ -535,6 +611,11 @@ namespace TP3
         return false;
     }
 
+    /**
+    * \fn	DicoSynonymes::_sousArbrePencheAGauche
+    * \brief balancement recursif d'un arbre (dans le meme groupe de methodes...)
+    * \param[in] arbre
+   */
     bool DicoSynonymes::_sousArbrePencheAGauche(NoeudDicoSynonymes *&arbre)
     {
         if(arbre == nullptr)
@@ -544,6 +625,11 @@ namespace TP3
         return false;
     }
 
+    /**
+    * \fn	DicoSynonymes::_zigZigGauche
+    * \brief balancement recursif d'un arbre (dans le meme groupe de methodes...) + ajustement des pointeurs
+    * \param[in] arbre
+   */
     void DicoSynonymes::_zigZigGauche(NoeudDicoSynonymes *&arbre)
     {
         if(arbre == racine)
@@ -566,6 +652,11 @@ namespace TP3
         }
     }
 
+    /**
+    * \fn	DicoSynonymes::_zigZigDroit
+    * \brief balancement recursif d'un arbre (dans le meme groupe de methodes...) + ajustement des pointeurs
+    * \param[in] arbre
+   */
     void DicoSynonymes::_zigZigDroit(NoeudDicoSynonymes *&arbre)
     {
         if(arbre == racine)
@@ -589,18 +680,33 @@ namespace TP3
 
     }
 
+    /**
+    * \fn	DicoSynonymes::_zigZagGauche
+    * \brief balancement recursif d'un arbre (dans le meme groupe de methodes...)
+    * \param[in] arbre
+   */
     void DicoSynonymes::_zigZagGauche(NoeudDicoSynonymes *&arbre)
     {
         _zigZigDroit(arbre->gauche);
         _zigZigGauche(arbre);
     }
 
+    /**
+    * \fn	DicoSynonymes::_zigZagDroit
+    * \brief balancement recursif d'un arbre (dans le meme groupe de methodes...)
+    * \param[in] arbre
+   */
     void DicoSynonymes::_zigZagDroit(NoeudDicoSynonymes *&arbre)
     {
         _zigZigGauche(arbre->droit);
         _zigZigDroit(arbre);
     }
 
+    /**
+    * \fn	DicoSynonymes::_auxAppartient
+    * \brief verifie si un radical appartient a un noeud et le retourne. Methode recursive
+    * \param[in] arbre, radical
+   */
     DicoSynonymes::NoeudDicoSynonymes * DicoSynonymes::_auxAppartient(NoeudDicoSynonymes *arbre, const std::string &radical) const
     {
         if(arbre == nullptr)
@@ -614,6 +720,11 @@ namespace TP3
             return arbre;
     }
 
+    /**
+    * \fn	DicoSynonymes::_listerPreOrdre
+    * \brief parcours d'un arbre avec la methode Pre-ordre de facon recursive
+    * \param[in] arbre
+   */
     std::vector<std::string>DicoSynonymes::_listerPreOrdre(NoeudDicoSynonymes *arbre) const
     {
         std::vector<std::string> radicaux;

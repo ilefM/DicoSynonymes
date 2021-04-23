@@ -48,11 +48,26 @@ namespace TP3
         _destructeur(racine);
     }
 
+    /**
+     * \fn	DicoSynonymes::ajouterRadical()
+     * \brief Ajouter un radical au dictionnaire des synonymes tout en s’assurant de maintenir l'équilibre de l'arbre.
+     * \brief Appel de la methode privee recursive
+     * \post Le mot est ajouté au dictionnaire des synonymes.
+     * \param[in] motRadical
+     */
     void DicoSynonymes::ajouterRadical(const std::string& motRadical)
     {
         _auxAjouterRadical(racine, motRadical);
     }
 
+    /**
+     * \fn	DicoSynonymes::ajouterFlexion()
+     * \brief Ajouter une flexion (motFlexion) d'un radical (motRadical) à sa liste de flexions.
+     * \param[in] motRadical, motFlexion
+     * \exception logic_error "DicoSynonymes::ajouterFlexion: Le radical n'est pas dans l'arbre!"
+     * \exception logic_error "DicoSynonymes::ajouterFlexion: La flexion existe deja !"
+     * \post La flexion est ajoutée au dictionnaire des synonymes.
+     */
     void DicoSynonymes::ajouterFlexion(const std::string& motRadical, const std::string& motFlexion)
     {
         NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, motRadical);
@@ -69,6 +84,15 @@ namespace TP3
         noeudRadical->flexions.push_back(motFlexion);
     }
 
+    /**
+     * \fn	DicoSynonymes::ajouterSynonyme
+     * \brief Ajouter un synonyme (motSynonyme) d'un radical (motRadical) à un de ses groupes de synonymes.
+     * \param[in] motRadical, motSynonyme, numGroupe
+     * \exception logic_error "DicoSynonymes::ajouterSynonyme: Le radical n'est pas dans l'arbre!"
+     * \exception logic_error "DicoSynonymes::ajouterSynonyme: Le synonyme pour le motRadical est deja present!"
+     * \exception logic_error "DicoSynonymes::ajouterSynonyme: le numGroupe n'est pas present dans appSynonymes du motRadical!"
+     * \post Le synonyme est ajouté au dictionnaire des synonymes. Si numGroupe vaut –1, le synonyme est ajouté dans un nouveau groupe de synonymes et retourne le numéro de ce nouveau groupe dans numgroupe par référence.
+     */
     void DicoSynonymes::ajouterSynonyme(const std::string& motRadical, const std::string& motSynonyme, int& numGroupe)
     {
         NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, motRadical);
@@ -99,12 +123,30 @@ namespace TP3
 
             NoeudDicoSynonymes* noeudSynonyme = _auxAppartient(racine, motSynonyme);
             groupesSynonymes[numGroupe].push_back(noeudSynonyme);
+
+            //Pour ne pas ajouter le radical dans le groupe a chaque fois qu'on ajoute un synonyme
+            /*
+            for(NoeudDicoSynonymes* radical : groupesSynonymes[numGroupe])
+            {
+                if(radical == noeudRadical)
+                {
+                    noeudSynonyme->appSynonymes.push_back(numGroupe);
+                    return;
+                }
+            }
             groupesSynonymes[numGroupe].push_back(noeudRadical);
+             */
             noeudSynonyme->appSynonymes.push_back(numGroupe);
         }
         else{throw std::logic_error("DicoSynonymes::ajouterSynonyme: le numGroupe n'est pas present dans appSynonymes du motRadical!");}
     }
 
+    /**
+     * \fn	DicoSynonymes::supprimerRadical
+     * \brief Supprimer un radical du dictionnaire des synonymes tout en s’assurant de maintenir l'équilibre de l'arbre.
+     * \param[in] motRadical
+     * \exception logic_error "DicoSynonymes::supprimerRadical: Le radical n'est pas dans l'arbre !"
+    */
     void DicoSynonymes::supprimerRadical(const std::string& motRadical)
     {
         NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, motRadical);
@@ -120,13 +162,36 @@ namespace TP3
         _auxSupprimerRadical(racine, motRadical);
     }
 
+    /**
+     * \fn	DicoSynonymes::supprimerFlexion
+     * \brief Supprimer une flexion (motFlexion) d'un radical (motRadical) de sa liste de flexions.
+     * \param[in] motRadical, motFlexion
+     * \exception logic_error "DicoSynonymes::supprimerFlexion: Le radical n'est pas dans l'arbre ou la flexion est incorrect!"
+    */
     void DicoSynonymes::supprimerFlexion(const std::string& motRadical, const std::string& motFlexion)
     {
         if(_auxAppartient(racine, motRadical) == nullptr || motFlexion.empty())
             throw std::logic_error("DicoSynonymes::supprimerFlexion: Le radical n'est pas dans l'arbre ou la flexion est incorrect!");
-        _auxAppartient(racine, motRadical)->flexions.remove(motFlexion);
+
+        for(std::string flexion :_auxAppartient(racine, motRadical)->flexions)
+        {
+            if(flexion == motFlexion)
+            {
+                _auxAppartient(racine, motRadical)->flexions.remove(motFlexion);
+                return;
+            }
+        }
+
+        throw std::logic_error("DicoSynonymes::supprimerFlexion: La flexion a supprimer ne fait pas partie de la liste des flexion du radical");
     }
 
+    /**
+     * \fn	DicoSynonymes::supprimerSynonyme
+     * \brief Retirer motSynonyme faisant partie du numéro de groupe numGroupe du motRadical.
+     * \param[in] motRadical, motSynonyme, numGroupe
+     * \exception logic_error "DicoSynonymes::supprimerSynonyme: Le radical ou le synonyme n'est pas dans l'arbre"
+     * \exception logic_error "DicoSynonymes::supprimerSynonyme: Le radical n'appartient pas au groupe numGroupe"
+    */
     void DicoSynonymes::supprimerSynonyme(const std::string& motRadical, const std::string& motSynonyme, int& numGroupe)
     {
         NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, motRadical);
@@ -157,11 +222,19 @@ namespace TP3
         }
     }
 
+    /**
+     * \fn	DicoSynonymes::estVide
+     * \brief Verifie si l'arbre est vide
+    */
     bool DicoSynonymes::estVide() const
     {
         return nbRadicaux == 0;
     }
 
+    /**
+     * \fn	DicoSynonymes::nombreRadicaux
+     * \brief Retourne le nombre de radicaux
+    */
     int DicoSynonymes::nombreRadicaux() const
     {
         return nbRadicaux;
@@ -169,6 +242,12 @@ namespace TP3
 
 
     // Méthode fournie
+    /**
+    * \fn	DicoSynonymes::chargerDicoSynonyme
+    * \brief Retirer motSynonyme faisant partie du numéro de groupe numGroupe du motRadical.
+    * \exception logic_error "DicoSynonymes::supprimerSynonyme: Le radical ou le synonyme n'est pas dans l'arbre"
+    * \exception logic_error "DicoSynonymes::supprimerSynonyme: Le radical n'appartient pas au groupe numGroupe"
+   */
     void DicoSynonymes::chargerDicoSynonyme(std::ifstream& fichier)
     {
         if (!fichier.is_open())
@@ -216,7 +295,26 @@ namespace TP3
 
     std::string DicoSynonymes::rechercherRadical(const std::string& mot) const
     {
-        return "";
+        if(nbRadicaux == 0)
+            throw std::logic_error("DicoSynonymes::rechercherRadical: L'arbre est vide!");
+
+        std::vector<std::string> radicaux = _listerPreOrdre(racine);
+        std::vector<float> radicauxSimilitude;
+
+        for(std::string radical : radicaux)
+            radicauxSimilitude.push_back(similitude(radical, mot));
+
+        int maxSimilitudeIndex = std::max_element(radicauxSimilitude.begin(), radicauxSimilitude.end()) - radicauxSimilitude.begin();
+
+        for(std::string flexion : getFlexions(radicaux[maxSimilitudeIndex]))
+        {
+            if(flexion == mot)
+                return radicaux[maxSimilitudeIndex];
+        }
+
+        throw std::logic_error("DicoSynonymes::rechercherRadical: La flexion n'est pas dans les flexions du radical!");
+
+
     }
 
     float DicoSynonymes::similitude(const std::string& mot1, const std::string& mot2) const
@@ -514,6 +612,20 @@ namespace TP3
             return _auxAppartient(arbre->droit, radical);
         else
             return arbre;
+    }
+
+    std::vector<std::string>DicoSynonymes::_listerPreOrdre(NoeudDicoSynonymes *arbre) const
+    {
+        std::vector<std::string> radicaux;
+        if(arbre != nullptr)
+        {
+            radicaux.push_back(arbre->radical);
+            std::vector<std::string> radicalGauche = _listerPreOrdre(arbre->gauche);
+            radicaux.insert(radicaux.cend(), radicalGauche.cbegin(), radicalGauche.cend());
+            std::vector<std::string> radicalDroit = _listerPreOrdre(arbre->droit);
+            radicaux.insert(radicaux.cend(), radicalDroit.cbegin(), radicalDroit.cend());
+        }
+        return radicaux;
     }
 
 }//Fin du namespace

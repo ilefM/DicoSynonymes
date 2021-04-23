@@ -337,6 +337,8 @@ namespace TP3
 
       NoeudDicoSynonymes* _auxAppartient(NoeudDicoSynonymes* arbre, const std::string & radical) const;
 
+       std::vector<std::string> _listerPreOrdre(NoeudDicoSynonymes* arbre) const;
+
 
 
 

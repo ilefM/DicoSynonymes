@@ -124,18 +124,6 @@ namespace TP3
             NoeudDicoSynonymes* noeudSynonyme = _auxAppartient(racine, motSynonyme);
             groupesSynonymes[numGroupe].push_back(noeudSynonyme);
 
-            //Pour ne pas ajouter le radical dans le groupe a chaque fois qu'on ajoute un synonyme
-            /*
-            for(NoeudDicoSynonymes* radical : groupesSynonymes[numGroupe])
-            {
-                if(radical == noeudRadical)
-                {
-                    noeudSynonyme->appSynonymes.push_back(numGroupe);
-                    return;
-                }
-            }
-            groupesSynonymes[numGroupe].push_back(noeudRadical);
-             */
             noeudSynonyme->appSynonymes.push_back(numGroupe);
         }
         else{throw std::logic_error("DicoSynonymes::ajouterSynonyme: le numGroupe n'est pas present dans appSynonymes du motRadical!");}

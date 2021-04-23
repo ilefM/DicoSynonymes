@@ -221,7 +221,42 @@ namespace TP3
 
     float DicoSynonymes::similitude(const std::string& mot1, const std::string& mot2) const
     {
-        return 0;
+        //J'utilise l'algorithme de distance de Jaro qui est plus optimal que celui de Levenshtein
+        const uint l1 = mot1.length(), l2 = mot2.length();
+        if (l1 == 0)
+            return l2 == 0 ? 1.0 : 0.0;
+        const uint match_distance = std::max(l1, l2) / 2 - 1;
+        bool mot1_matches[l1];
+        bool mot2_matches[l2];
+        std::fill(mot1_matches, mot1_matches + l1, false);
+        std::fill(mot2_matches, mot2_matches + l2, false);
+        uint matches = 0;
+        for (uint i = 0; i < l1; i++)
+        {
+            const int end = std::min(i + match_distance + 1, l2);
+            for (int k = ( i - match_distance); k < end; k++)
+                if (!mot2_matches[k] && mot1[i] == mot2[k])
+                {
+                    mot1_matches[i] = true;
+                    mot2_matches[k] = true;
+                    matches++;
+                    break;
+                }
+        }
+        if (matches == 0)
+            return 0.0;
+        double t = 0.0;
+        uint k = 0;
+        for (uint i = 0; i < l1; i++)
+            if (mot1_matches[i])
+            {
+                while (!mot2_matches[k]) k++;
+                if (mot1[i] != mot2[k]) t += 0.5;
+                k++;
+            }
+
+        const double m = matches;
+        return (m / l1 + m / l2 + (m - t) / m) / 3.0;
     }
 
     int DicoSynonymes::getNombreSens(std::string radical) const

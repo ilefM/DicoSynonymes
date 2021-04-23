@@ -112,20 +112,11 @@ namespace TP3
         if(noeudRadical == nullptr)
             throw std::logic_error("DicoSynonymes::supprimerRadical: Le radical n'est pas dans l'arbre !");
 
-        //Suppression de tout pointeur pointant sur le radical en question
-        /*
-        for(std::list<NoeudDicoSynonymes*> synonymesList : groupesSynonymes)
+        std::vector<int> appSynonymeRadical = noeudRadical->appSynonymes;
+        for(int groupe : appSynonymeRadical)
         {
-            for(NoeudDicoSynonymes* noeud : synonymesList)
-            {
-                if(noeud->radical == motRadical)
-                {
-                    delete noeud;
-                    synonymesList.remove(noeud);
-                }
-            }
+            supprimerSynonyme(motRadical, motRadical, groupe);
         }
-         */
         _auxSupprimerRadical(racine, motRadical);
     }
 
@@ -157,8 +148,11 @@ namespace TP3
         {
             if(noeud == noeudSynonyme)
             {
-                delete noeud;
                 groupesSynonymes[numGroupe].remove(noeud);
+                noeud->appSynonymes.
+                erase(std::remove(noeud->appSynonymes.begin(),noeud->appSynonymes.end(), numGroupe),
+                      noeud->appSynonymes.end());
+                break;
             }
         }
     }
@@ -326,7 +320,7 @@ namespace TP3
             NoeudDicoSynonymes* vieuxNoeud = arbre;
             arbre = (arbre->gauche != nullptr) ? arbre->gauche : arbre->droit;
             delete vieuxNoeud;
-            nbRadicaux--;
+            --nbRadicaux;
         }
          _balance(arbre);
     }

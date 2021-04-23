@@ -58,12 +58,12 @@ namespace TP3
         NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, motRadical);
 
         if(noeudRadical == nullptr)
-            throw std::logic_error("Le Radical n'est pas dans l'arbre!");
+            throw std::logic_error("DicoSynonymes::ajouterFlexion: Le radical n'est pas dans l'arbre!");
 
         for(std::string flexion : noeudRadical->flexions)
         {
             if(flexion == motFlexion)
-                throw std::logic_error("La flexion existe deja !");
+                throw std::logic_error("DicoSynonymes::ajouterFlexion: La flexion existe deja !");
         }
 
         noeudRadical->flexions.push_back(motFlexion);
@@ -75,7 +75,7 @@ namespace TP3
 
         //Verifier si le radical existe
         if(noeudRadical == nullptr)
-            throw std::logic_error("Le radical n'est pas dans l'arbre!");
+            throw std::logic_error("DicoSynonymes::ajouterSynonyme: Le radical n'est pas dans l'arbre!");
 
         if(numGroupe == -1)
         {
@@ -91,7 +91,7 @@ namespace TP3
         {
             for(NoeudDicoSynonymes* noeud : groupesSynonymes[numGroupe])
                 if(noeud->radical == motSynonyme)
-                    throw std::logic_error("Le synonyme pour le motRadical est deja present!");
+                    throw std::logic_error("DicoSynonymes::ajouterSynonyme: Le synonyme pour le motRadical est deja present!");
 
             //Si le synonyme n'est pas present dans larbre, l'ajouter dans l'arbre pour l'ajouter dans le groupe
             if(_auxAppartient(racine, motSynonyme) == nullptr)
@@ -102,7 +102,7 @@ namespace TP3
             groupesSynonymes[numGroupe].push_back(noeudRadical);
             noeudSynonyme->appSynonymes.push_back(numGroupe);
         }
-        else{throw std::logic_error("le numGroupe n'est pas present dans appSynonymes du motRadical!");}
+        else{throw std::logic_error("DicoSynonymes::ajouterSynonyme: le numGroupe n'est pas present dans appSynonymes du motRadical!");}
     }
 
     void DicoSynonymes::supprimerRadical(const std::string& motRadical)
@@ -110,9 +110,10 @@ namespace TP3
         NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, motRadical);
 
         if(noeudRadical == nullptr)
-            throw std::logic_error("Le radical n'est pas dans l'arbre !");
+            throw std::logic_error("DicoSynonymes::supprimerRadical: Le radical n'est pas dans l'arbre !");
 
         //Suppression de tout pointeur pointant sur le radical en question
+        /*
         for(std::list<NoeudDicoSynonymes*> synonymesList : groupesSynonymes)
         {
             for(NoeudDicoSynonymes* noeud : synonymesList)
@@ -124,19 +125,42 @@ namespace TP3
                 }
             }
         }
+         */
         _auxSupprimerRadical(racine, motRadical);
     }
 
     void DicoSynonymes::supprimerFlexion(const std::string& motRadical, const std::string& motFlexion)
     {
         if(_auxAppartient(racine, motRadical) == nullptr || motFlexion.empty())
-            throw std::logic_error("Le radical n'est pas dans l'arbre ou la flexion est incorrect!");
+            throw std::logic_error("DicoSynonymes::supprimerFlexion: Le radical n'est pas dans l'arbre ou la flexion est incorrect!");
         _auxAppartient(racine, motRadical)->flexions.remove(motFlexion);
     }
 
     void DicoSynonymes::supprimerSynonyme(const std::string& motRadical, const std::string& motSynonyme, int& numGroupe)
     {
+        NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, motRadical);
+        NoeudDicoSynonymes* noeudSynonyme = _auxAppartient(racine, motSynonyme);
 
+        if(noeudRadical == nullptr || noeudSynonyme == nullptr)
+            throw std::logic_error("DicoSynonymes::supprimerSynonyme: Le radical ou le synonyme n'est pas dans l'arbre");
+
+        bool radicalAppGroupe = false;
+        for(int groupe : noeudRadical->appSynonymes)
+        {
+            if(groupe == numGroupe)
+                radicalAppGroupe = true;
+        }
+        if(!radicalAppGroupe)
+            throw std::logic_error("DicoSynonymes::supprimerSynonyme: Le radical n'appartient pas au groupe numGroupe");
+
+        for(NoeudDicoSynonymes* noeud : groupesSynonymes[numGroupe])
+        {
+            if(noeud == noeudSynonyme)
+            {
+                delete noeud;
+                groupesSynonymes[numGroupe].remove(noeud);
+            }
+        }
     }
 
     bool DicoSynonymes::estVide() const
@@ -216,9 +240,9 @@ namespace TP3
         NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, radical);
 
         if(noeudRadical == nullptr)
-            throw std::logic_error("Le radical n'est pas dans l'arbre !");
+            throw std::logic_error("DicoSynonymes::getSens: Le radical n'est pas dans l'arbre !");
         if(position > noeudRadical->appSynonymes.size() - 1)
-            throw std::logic_error("La position entree n'est pas valide");
+            throw std::logic_error("DicoSynonymes::getSens: La position entree n'est pas valide");
 
         return groupesSynonymes[noeudRadical->appSynonymes[position]].front()->radical;
     }
@@ -227,9 +251,9 @@ namespace TP3
     {
         NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, radical);
         if(noeudRadical == nullptr)
-            throw std::logic_error("Le radical n'est pas dans l'arbre ! ");
+            throw std::logic_error("DicoSynonymes::getSynonymes: Le radical n'est pas dans l'arbre ! ");
         if(position > noeudRadical->appSynonymes.size() - 1)
-            throw std::logic_error("La position entree n'est pas valide");
+            throw std::logic_error("DicoSynonymes::getSynonymes: La position entree n'est pas valide");
 
         std::list<NoeudDicoSynonymes*> synonymesList = groupesSynonymes[noeudRadical->appSynonymes[position]];
         std::vector<std::string> synonymesVec;
@@ -244,7 +268,7 @@ namespace TP3
     {
         NoeudDicoSynonymes* noeudRadical = _auxAppartient(racine, radical);
         if(noeudRadical == nullptr)
-            throw std::logic_error("Le radical n'est pas dans l'arbre !");
+            throw std::logic_error("DicoSynonymes::getFlexions: Le radical n'est pas dans l'arbre !");
 
         std::vector<std::string> flexionsVec;
 
@@ -259,7 +283,7 @@ namespace TP3
 
     /////////////////////// METHODES PRIVEES //////////////////////////
 
-    void DicoSynonymes::_destructeur(NoeudDicoSynonymes* & noeud)
+    void DicoSynonymes::_destructeur(NoeudDicoSynonymes *&noeud)
     {
         if(noeud != nullptr)
         {
@@ -269,7 +293,7 @@ namespace TP3
         }
     }
 
-    void DicoSynonymes::_auxAjouterRadical(NoeudDicoSynonymes* & noeud, const std::string &motRadical)
+    void DicoSynonymes::_auxAjouterRadical(NoeudDicoSynonymes *&noeud, const std::string &motRadical)
     {
         if(noeud == nullptr)
         {
@@ -282,35 +306,35 @@ namespace TP3
         else if(motRadical > noeud->radical)
             _auxAjouterRadical(noeud->droit, motRadical);
         else
-            throw std::logic_error("Le radical existe deja !");
+            throw std::logic_error("DicoSynonymes::_auxAjouterRadical: Le radical existe deja !");
 
-        _balance();
+        _balance(noeud);
     }
 
-    void DicoSynonymes::_auxSupprimerRadical(NoeudDicoSynonymes *noeud, const std::string &motRadical)
+    void DicoSynonymes::_auxSupprimerRadical(NoeudDicoSynonymes *&arbre, const std::string &motRadical)
     {
-        if(noeud == nullptr)
-            throw std::logic_error("Le radical a supprimer est absent!");
-        if(motRadical < noeud->radical)
-            _auxSupprimerRadical(noeud->gauche, motRadical);
-        else if(motRadical > noeud->radical)
-            _auxSupprimerRadical(noeud->droit, motRadical);
-        else if(noeud->gauche != nullptr && noeud->droit != nullptr)
-            _supprimerSuccMinDroite(noeud);
+        if(arbre == nullptr)
+            throw std::logic_error("DicoSynonymes::_auxSupprimerRadical: Le radical a supprimer est absent!");
+        if(motRadical < arbre->radical)
+            _auxSupprimerRadical(arbre->gauche, motRadical);
+        else if(motRadical > arbre->radical)
+            _auxSupprimerRadical(arbre->droit, motRadical);
+        else if(arbre->gauche != nullptr && arbre->droit != nullptr)
+            _supprimerSuccMinDroite(arbre);
         else
         {
-            NoeudDicoSynonymes* vieuxNoeud = noeud;
-            noeud = (noeud->gauche != nullptr) ? noeud->gauche : noeud->droit;
+            NoeudDicoSynonymes* vieuxNoeud = arbre;
+            arbre = (arbre->gauche != nullptr) ? arbre->gauche : arbre->droit;
             delete vieuxNoeud;
             nbRadicaux--;
         }
-        _balance();
+         _balance(arbre);
     }
 
-    void DicoSynonymes::_supprimerSuccMinDroite(NoeudDicoSynonymes *noeud)
+    void DicoSynonymes::_supprimerSuccMinDroite(NoeudDicoSynonymes *arbre)
     {
-        NoeudDicoSynonymes* temp = noeud->droit;
-        NoeudDicoSynonymes* parent = noeud;
+        NoeudDicoSynonymes* temp = arbre->droit;
+        NoeudDicoSynonymes* parent = arbre;
 
         while (temp->gauche != 0)
         {
@@ -318,9 +342,9 @@ namespace TP3
             temp = temp->gauche;
         }
 
-        noeud->radical = temp->radical;
-        std::swap(noeud->appSynonymes, temp->appSynonymes);
-        std::swap(noeud->flexions, temp->flexions);
+        arbre->radical = temp->radical;
+        std::swap(arbre->appSynonymes, temp->appSynonymes);
+        std::swap(arbre->flexions, temp->flexions);
 
         if(temp == parent->gauche)
             _auxSupprimerRadical(parent->gauche, temp->radical);
@@ -328,25 +352,25 @@ namespace TP3
             _auxSupprimerRadical(parent->droit, temp->radical);
     }
 
-    void DicoSynonymes::_balance()
+    void DicoSynonymes::_balance(NoeudDicoSynonymes* &arbre)
     {
-        if(_debalancementAGauche(racine))
+        if(_debalancementAGauche(arbre))
         {
-            if(_sousArbrePencheADroite(racine->gauche))
-                _zigZagGauche(racine);
+            if(_sousArbrePencheADroite(arbre->gauche))
+                _zigZagGauche(arbre);
             else
-                _zigZigGauche(racine);
-        } else if(_debalancementADroite(racine))
+                _zigZigGauche(arbre);
+        } else if(_debalancementADroite(arbre))
         {
-            if(_sousArbrePencheAGauche(racine->droit))
-                _zigZagDroit(racine);
+            if(_sousArbrePencheAGauche(arbre->droit))
+                _zigZagDroit(arbre);
             else
-                _zigZigDroit(racine);
+                _zigZigDroit(arbre);
         }
         else
         {
-            if(racine != nullptr)
-                racine->hauteur = 1 + std::max(_hauteur(racine->gauche), _hauteur(racine->droit));
+            if(arbre != nullptr)
+                arbre->hauteur = 1 + std::max(_hauteur(arbre->gauche), _hauteur(arbre->droit));
         }
     }
 
@@ -361,48 +385,81 @@ namespace TP3
     {
         if(arbre == nullptr)
             return false;
-        return 1 < _hauteur(arbre->gauche) - _hauteur(arbre->droit);
+        if(1 < _hauteur(arbre->gauche) - _hauteur(arbre->droit))
+            return true;
+        return false;
     }
 
     bool DicoSynonymes::_debalancementADroite(NoeudDicoSynonymes *&arbre)
     {
         if(arbre == nullptr)
             return false;
-        return 1 < _hauteur(arbre->droit) - _hauteur(arbre->gauche);
+        if(1 < _hauteur(arbre->droit) - _hauteur(arbre->gauche))
+            return true;
+        return false;
     }
 
     bool DicoSynonymes::_sousArbrePencheADroite(NoeudDicoSynonymes *&arbre)
     {
         if(arbre == nullptr)
             return false;
-        return _hauteur(arbre->gauche) < _hauteur(arbre->droit);
+        if(_hauteur(arbre->gauche) < _hauteur(arbre->droit))
+            return true;
+        return false;
     }
 
     bool DicoSynonymes::_sousArbrePencheAGauche(NoeudDicoSynonymes *&arbre)
     {
         if(arbre == nullptr)
             return false;
-        return _hauteur(arbre->droit) < _hauteur(arbre->gauche);
+        if(_hauteur(arbre->droit) < _hauteur(arbre->gauche))
+            return true;
+        return false;
     }
 
     void DicoSynonymes::_zigZigGauche(NoeudDicoSynonymes *&arbre)
     {
-        NoeudDicoSynonymes *noeud = arbre->gauche;
-        arbre->gauche = noeud->droit;
-        noeud->droit = arbre;
-        arbre->hauteur = 1 + std::max(_hauteur(arbre->gauche), _hauteur(arbre->droit));
-        noeud->hauteur = 1 + std::max(_hauteur(noeud->gauche), arbre->hauteur);
-        arbre = noeud;
+        if(arbre == racine)
+        {
+            NoeudDicoSynonymes *noeud = racine->gauche;
+            racine->gauche = noeud->droit;
+            noeud->droit = racine;
+            racine->hauteur = 1 + std::max(_hauteur(racine->gauche), _hauteur(racine->droit));
+            noeud->hauteur = 1 + std::max(_hauteur(noeud->gauche), racine->hauteur);
+            racine = noeud;
+        }
+        else
+        {
+            NoeudDicoSynonymes *noeud = arbre->gauche;
+            arbre->gauche = noeud->droit;
+            noeud->droit = arbre;
+            arbre->hauteur = 1 + std::max(_hauteur(arbre->gauche), _hauteur(arbre->droit));
+            noeud->hauteur = 1 + std::max(_hauteur(noeud->gauche), arbre->hauteur);
+            arbre = noeud;
+        }
     }
 
     void DicoSynonymes::_zigZigDroit(NoeudDicoSynonymes *&arbre)
     {
-        NoeudDicoSynonymes *noeud = arbre->droit;
-        arbre->droit = noeud->gauche;
-        noeud->gauche = arbre;
-        arbre->hauteur = 1 + std::max(_hauteur(arbre->droit), _hauteur(arbre->gauche));
-        noeud->hauteur = 1 + std::max(_hauteur(noeud->droit), arbre->hauteur);
-        arbre = noeud;
+        if(arbre == racine)
+        {
+            NoeudDicoSynonymes *noeud = racine->droit;
+            racine->droit = noeud->gauche;
+            noeud->gauche = racine;
+            racine->hauteur = 1 + std::max(_hauteur(racine->droit), _hauteur(racine->gauche));
+            noeud->hauteur = 1 + std::max(_hauteur(noeud->droit), racine->hauteur);
+            racine = noeud;
+        }
+        else
+        {
+            NoeudDicoSynonymes *noeud = arbre->droit;
+            arbre->droit = noeud->gauche;
+            noeud->gauche = arbre;
+            arbre->hauteur = 1 + std::max(_hauteur(arbre->droit), _hauteur(arbre->gauche));
+            noeud->hauteur = 1 + std::max(_hauteur(noeud->droit), arbre->hauteur);
+            arbre = noeud;
+        }
+
     }
 
     void DicoSynonymes::_zigZagGauche(NoeudDicoSynonymes *&arbre)

@@ -320,11 +320,11 @@ namespace TP3
 
       // Ajoutez vos méthodes privées ici !
       void _destructeur(NoeudDicoSynonymes* & arbre);
-      void _auxAjouterRadical(NoeudDicoSynonymes* & noeud, const std::string& motRadical);
-      void _auxSupprimerRadical(NoeudDicoSynonymes* noeud, const std::string& motRadical);
-      void _supprimerSuccMinDroite(NoeudDicoSynonymes* noeud);
+      void _auxAjouterRadical(NoeudDicoSynonymes* &arbre, const std::string& motRadical);
+      void _auxSupprimerRadical(NoeudDicoSynonymes* &arbre, const std::string& motRadical);
+      void _supprimerSuccMinDroite(NoeudDicoSynonymes* arbre);
 
-      void _balance();
+      void _balance(NoeudDicoSynonymes *& arbre);
       bool _debalancementAGauche(NoeudDicoSynonymes* & arbre);
       bool _debalancementADroite(NoeudDicoSynonymes* & arbre);
       bool _sousArbrePencheADroite(NoeudDicoSynonymes* & arbre);
